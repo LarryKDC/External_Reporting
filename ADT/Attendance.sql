@@ -32,3 +32,4 @@ left outer join calendar_day cd on cd.date_value between e.entrydate and e.exitd
 left outer join attendance a on a.att_date = cd.date_value and a.studentid = e.studentid and att_mode_code = 'ATT_ModeDaily'
 left outer join attendance_code ac on ac.id = a.attendance_codeid
 where cd.date_value between '10-AUG-15' and '16-JUN-16'
+and cd.insession = 1
