@@ -5,19 +5,8 @@ select
 , 'Attendance' COLLECTION_TYPE
 , s.student_number AS SIS_ID
 , TO_CHAR (cd.date_value, 'DD/MM/YYYY') as ATTENDANCE_DATE
-, CASE To_Char(a.ATT_MODE_CODE) 
-    WHEN 'ATT_ModeDaily' THEN 'D'
-  END AS ATTENDANCE_COLLECTION_TYPE
-, case 
-    when ac.att_code = 'O' then 'AOS'
-    when ac.att_code in ('AE','M','MP','AP','EX','IC') then 'AFE'
-    when ac.att_code in ('A','MU') then 'AFU'
-    when ac.att_code = 'ISS' then 'PIS'
-    when ac.att_code in ('NA','TC') or ac.att_code is null then 'PF'
-    when ac.att_code in ('R','TE') then 'PPE'
-    when ac.att_code = 'T' then 'PPU'
-    else NULL
-  end as ATTENDANCE_STATUS_CODE
+, a.ATT_MODE_CODE AS ATTENDANCE_COLLECTION_TYPE
+, ac.att_code as ATTENDANCE_STATUS_CODE
 , '' AS ATTENDANCE_ABSENCE_REASON 
 FROM students s
 JOIN (
