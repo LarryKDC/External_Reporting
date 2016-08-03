@@ -8,8 +8,8 @@ Select
 , 'Enrollment' COLLECTION_TYPE
 , student_number AS SIS_ID
 , to_char(grade_level) AS ENROLL_GRADE_LEVEL
-, case when schoolid = 2001 then ps_customfields.getStudentsCF(s.id, 'SPED_Responsible_SchoolID') else TO_CHAR(schoolid) end AS ATTENDING_SCHOOL_ID 
-, case when schoolid = 2001 then ps_customfields.getStudentsCF(s.id, 'NPP_School') else sc.abbreviation end AS ATTENDING_SCHOOL_NAME
+, case when schoolid = 2001 then ps_customfields.getStudentsCF(s.id,'SPED_Placed_Campus_ID') else TO_CHAR(schoolid) end AS ATTENDING_SCHOOL_ID 
+, case when schoolid = 2001 then ps_customfields.getStudentsCF(s.id, 'SPED_NPP_School') else sc.abbreviation end AS ATTENDING_SCHOOL_NAME
 , NULL as DUAL_ENROLLMENT
 , NULL AS ATTENDING_SCHOOL_TYPE
 , '' AS SITE_ID
