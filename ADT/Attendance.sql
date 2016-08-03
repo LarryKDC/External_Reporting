@@ -29,5 +29,5 @@ join schools sc on sc.school_number = e.schoolid and sc.school_number!=2001
 left outer join calendar_day cd on cd.date_value between e.entrydate and e.exitdate and e.schoolid = cd.schoolid
 left outer join attendance a on a.att_date = cd.date_value and a.studentid = e.studentid and att_mode_code = 'ATT_ModeDaily'
 left outer join attendance_code ac on ac.id = a.attendance_codeid
-where cd.date_value between '8-AUG-16' and '30-JUN-17'
+where cd.date_value between '8-AUG-16' and sysdate
 and cd.insession = 1
