@@ -1,26 +1,33 @@
 select 
  '129' as LEA_ID
-, '' AS SCHOOL_YEAR 
+, '2016-2017' AS SCHOOL_YEAR 
 , TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI')AS COLLECTION_DATE
 , 'Attendance' COLLECTION_TYPE
 , s.student_number AS SIS_ID
-, cd.date_value as ATTENDANCE_DATE
-, CASE To_Char(a.ccid) 
-    WHEN '0' THEN 'D'
-END AS ATTENDANCE_COLLECTION_TYPE
-/*USE THIS INSTEAD OF “A.CCID” IF YOU USE ATT_MODE_CODE*/
-/*,  a.att_mode_code AS ATTENDANCE_COLLECTION_TYPE */
-, coalesce(case when ac.att_code = 'NA' then Null
-    else ac.att_code end,'P') AS ATTENDANCE_STATUS_CODE
+, TO_CHAR (cd.date_value, 'DD/MM/YYYY') as ATTENDANCE_DATE
+, CASE To_Char(a.ATT_MODE_CODE) 
+    WHEN 'ATT_ModeDaily' THEN 'D'
+  END AS ATTENDANCE_COLLECTION_TYPE
+, case 
+    when ac.att_code = 'O' then 'AOS'
+    when ac.att_code in ('AE','M','MP','AP','EX','IC') then 'AFE'
+    when ac.att_code in ('A','MU') then 'AFU'
+    when ac.att_code = 'ISS' then 'PIS'
+    when ac.att_code in ('NA','TC') or ac.att_code is null then 'PF'
+    when ac.att_code in ('R','TE') then 'PPE'
+    when ac.att_code = 'T' then 'PPU'
+    else NULL
+  end as ATTENDANCE_STATUS_CODE
 , '' AS ATTENDANCE_ABSENCE_REASON 
-FROM schools sc
+FROM students s
 JOIN (
   SELECT id studentid, schoolid, grade_level, entrydate, entrycode, exitdate, exitcode FROM students
   UNION ALL
   SELECT studentid, schoolid, grade_level, entrydate, entrycode, exitdate, exitcode FROM reenrollments
-) e ON e.schoolid = sc.school_number and sc.school_number!=2001
-join students s on s.id = e.studentid
-JOIN calendar_day cd ON cd.schoolid = e.schoolid AND cd.date_value BETWEEN e.entrydate AND e.exitdate-1 AND cd.insession = 1
-left outer join attendance a on a.studentid = e.studentid and a.att_date = cd.date_value and att_mode_code = 'ATT_ModeDaily'
-left join attendance_code ac on ac.id = a.attendance_codeid
-where cd.date_value between '01-JUL-15' and sysdate
+) e ON e.studentid = s.id
+join schools sc on sc.school_number = e.schoolid and sc.school_number!=2001
+left outer join calendar_day cd on cd.date_value between e.entrydate and e.exitdate and e.schoolid = cd.schoolid
+left outer join attendance a on a.att_date = cd.date_value and a.studentid = e.studentid and att_mode_code = 'ATT_ModeDaily'
+left outer join attendance_code ac on ac.id = a.attendance_codeid
+where cd.date_value between '8-AUG-16' and '30-JUN-17'
+and cd.insession = 1
