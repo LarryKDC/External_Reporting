@@ -4,7 +4,7 @@ Select
 , '' AS LOCAL_SCHOOL_TYPE
 , '2016-2017' AS SCHOOL_YEAR
 , ps_customfields.getStudentsCF(s.id, 'SPED_esy') AS ENROLLMENT_PERIOD
-, TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI')AS COLLECTION_DATE
+, TO_CHAR(SYSDATE,'MM/DD/YYYY HH24:MI')AS COLLECTION_DATE
 , 'Enrollment' COLLECTION_TYPE
 , student_number AS SIS_ID
 , to_char(grade_level) AS ENROLL_GRADE_LEVEL
@@ -18,12 +18,12 @@ Select
 , '' AS ENROLLMENT_1_APPLICATION
 , '' AS ENROLLMENT_2_NOTIFICATION
 , '' AS ENROLLMENT_3_ACCEPTED
-, TO_CHAR(entrydate,'DD-MM-YYYY') AS ENROLLMENT_4_REGISTRATION
+, TO_CHAR(entrydate,'MM/DD/YYYY') AS ENROLLMENT_4_REGISTRATION
 , case 
-    when entrydate <= '08-AUG-16' and grade_level between -1 and 8 then to_char('08-08-2016')   
-    when entrydate <= '15-AUG-16' and (grade_level = -2 or grade_level = 9) then to_char('15-08-2016')   
-    when entrydate <= '22-AUG-16' and grade_level between 10 and 12 then to_char('22-08-2016') 
-    else to_char(entrydate,'DD-MM-YYYY') 
+    when entrydate <= '08-AUG-16' and grade_level between -1 and 8 then to_char('08/08/2016')   
+    when entrydate <= '15-AUG-16' and (grade_level = -2 or grade_level = 9) then to_char('08/15/2016')   
+    when entrydate <= '22-AUG-16' and grade_level between 10 and 12 then to_char('08/22/2016') 
+    else to_char(entrydate,'MM/DD/YYYY') 
   end AS ENROLLMENT_5_SERVICES_RECEIVED
 , entrycode AS ENROLLMENT_CODE
 , '' AS EXIT_DATE
@@ -31,4 +31,4 @@ Select
 , '' AS ENROLLMENT_TRANS_ID
 FROM students s
 join schools sc on sc.school_number = s.schoolid
-where to_char(entrydate, 'YYYY-MM-DD') >='2016-07-01'
+where entrydate >= '01-JUL-16'
