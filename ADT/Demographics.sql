@@ -1,7 +1,7 @@
 SELECT
  '129' AS LEA_ID
 , '2016-2017' AS SCHOOL_YEAR
-, TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI') AS COLLECTION_DATE
+, TO_CHAR(SYSDATE,'MM/DD/YYYY HH24:MI') AS COLLECTION_DATE
 , 'Demographics' AS COLLECTION_TYPE
 , TO_CHAR(s.student_number) AS SIS_ID
 , ps_customfields.getStudentsCF(s.id,'State_USI') AS USI
@@ -12,7 +12,7 @@ SELECT
 , '' AS SUFFIX
 , '' AS ALIAS_MAIDEN
 , s.gender AS GENDER
-, TO_CHAR(s.dob,'DD-MM-YYYY') AS DOB
+, TO_CHAR(s.dob,'MM/DD/YYYY') AS DOB
 , ps_customfields.getStudentsCF(s.id,'COUNTRY_OF_BIRTH') AS Country_of_Birth
 , ps_customfields.getStudentsCF(s.id,'NEW_TO_US') AS NEW_TO_US
 , '' AS NATIV_LANG
@@ -35,8 +35,5 @@ SELECT
 , ps_customfields.getStudentsCF(s.id,'STATE_TUITION') AS TUITION_INDICATOR
 , ps_customfields.getStudentsCF(s.id,'STATE_UHC') AS UNIVERSAL_HEALTH_CERTIFICATE
 , s.home_room AS COUNT_LOCATION
-, '' AS CUSTOM_1
-, '' AS CUSTOM_2
-, '' AS CUSTOM_3
 FROM students s
-where to_char(entrydate, 'YYYY-MM-DD') >= '2016-07-01'
+where entrydate >= '01-JUL-16'
