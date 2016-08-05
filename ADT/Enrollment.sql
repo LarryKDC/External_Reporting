@@ -19,30 +19,36 @@ Select
 , '' AS ENROLLMENT_2_NOTIFICATION
 , '' AS ENROLLMENT_3_ACCEPTED
 , TO_CHAR(entrydate,'MM/DD/YYYY') AS ENROLLMENT_4_REGISTRATION
-, case --make date null if current date is before stage 5 enrollment date
-  when(
-      case 
-        when entrydate <= '08-AUG-16' and grade_level between -1 and 8 then to_char('08/08/2016')   
-        when entrydate <= '15-AUG-16' and (grade_level = -2 or grade_level = 9) then to_char('08/15/2016')   
-        when entrydate <= '22-AUG-16' and grade_level between 10 and 12 then to_char('08/22/2016') 
+, case 
+    when 
+      (case --make date null if current date is before stage 5 enrollment date
+         when entrydate <= '08-AUG-16' and grade_level between -1 and 8 then to_char('08/08/2016')   
+         when entrydate <= '15-AUG-16' and (grade_level = -2 or grade_level = 9) then to_char('08/15/2016')   
+         when entrydate <= '22-AUG-16' and grade_level between 10 and 12 then to_char('08/22/2016') 
         else to_char(entrydate,'MM/DD/YYYY') 
-      end) >= to_char(sysdate,'MM/DD/YYYY') then NULL 
-  else (
-      case 
-        when entrydate <= '08-AUG-16' and grade_level between -1 and 8 then to_char('08/08/2016')   
-        when entrydate <= '15-AUG-16' and (grade_level = -2 or grade_level = 9) then to_char('08/15/2016')   
-        when entrydate <= '22-AUG-16' and grade_level between 10 and 12 then to_char('08/22/2016') 
-        else to_char(entrydate,'MM/DD/YYYY') 
-      end) 
+      end) > to_char(sysdate,'MM/DD/YYYY') then NULL 
+  else 
+    (case --otherwide return grade level dependent stage 5 date, but only when entry date is before the stage 5 date otherwise entrydate (stage 4) and stage 5 date are the same
+      when entrydate <= '08-AUG-16' and grade_level between -1 and 8 then to_char('08/08/2016')   
+      when entrydate <= '15-AUG-16' and (grade_level = -2 or grade_level = 9) then to_char('08/15/2016')   
+      when entrydate <= '22-AUG-16' and grade_level between 10 and 12 then to_char('08/22/2016') 
+      else to_char(entrydate,'MM/DD/YYYY') 
+    end) 
   end AS ENROLLMENT_5_SERVICES_RECEIVED
 , case 
-    when ((grade_level between -1 and 8 and sysdate < '08-AUG-16' ) or
-          (grade_level = -2 and sysdate < '15-AUG-16') or
-          (grade_level between 10 and 12 and sysdate < '22-AUG-16')) then NULL --make enrollment_code null if stage 5 date is after current date (sysdate)
-  else entrycode end AS ENROLLMENT_CODE
+    when --make code null if stage 5 date is after current date; NULL is mapped to 1800 (pre-enrollment) in ADT
+      (case 
+        when entrydate <= '08-AUG-16' and grade_level between -1 and 8 then to_char('08/08/2016')   
+        when entrydate <= '15-AUG-16' and (grade_level = -2 or grade_level = 9) then to_char('08/15/2016')   
+        when entrydate <= '22-AUG-16' and grade_level between 10 and 12 then to_char('08/22/2016') 
+        else to_char(entrydate,'MM/DD/YYYY') 
+      end) > to_char(sysdate,'MM/DD/YYYY') then NULL 
+    else entrycode --if current date is after stage 5 date then just use the regular entrycode
+  end AS ENROLLMENT_CODE
 , '' AS EXIT_DATE
 , exitcode AS EXIT_CODE
 , '' AS ENROLLMENT_TRANS_ID
 FROM students s
 join schools sc on sc.school_number = s.schoolid
 where entrydate >= '01-JUL-16'
+and schoolid != 999999
