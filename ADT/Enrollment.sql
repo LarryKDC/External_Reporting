@@ -45,8 +45,14 @@ Select
       end) > to_char(sysdate,'MM/DD/YYYY') then NULL 
     else entrycode --if current date is after stage 5 date then just use the regular entrycode
   end AS ENROLLMENT_CODE
-, '' AS EXIT_DATE
-, exitcode AS EXIT_CODE
+, case 
+    when exitdate <= sysdate then to_char(exitdate,'MM/DD/YYYY') 
+    else null 
+  end  AS EXIT_DATE
+, case 
+    when exitdate <= sysdate then exitcode 
+    else null 
+  end AS EXIT_CODE
 , '' AS ENROLLMENT_TRANS_ID
 FROM students s
 join schools sc on sc.school_number = s.schoolid
