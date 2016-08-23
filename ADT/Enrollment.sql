@@ -21,12 +21,18 @@ Select
 , TO_CHAR(entrydate,'MM/DD/YYYY') AS ENROLLMENT_4_REGISTRATION
 , case 
     when 
-      (case --make date null if current date is before stage 5 enrollment date
+      ((case --make date null if current date is before stage 5 enrollment date
          when entrydate <= '08-AUG-16' and grade_level between -1 and 8 then to_char('08/08/2016')   
          when entrydate <= '15-AUG-16' and (grade_level = -2 or grade_level = 9) then to_char('08/15/2016')   
          when entrydate <= '22-AUG-16' and grade_level between 10 and 12 then to_char('08/22/2016') 
         else to_char(entrydate,'MM/DD/YYYY') 
-      end) > to_char(sysdate,'MM/DD/YYYY') then NULL 
+      end) > to_char(sysdate,'MM/DD/YYYY') or 
+      (case -- if exit date is before stage 5 enrollment date make it null
+         when entrydate <= '08-AUG-16' and grade_level between -1 and 8 then to_char('08/08/2016')   
+         when entrydate <= '15-AUG-16' and (grade_level = -2 or grade_level = 9) then to_char('08/15/2016')   
+         when entrydate <= '22-AUG-16' and grade_level between 10 and 12 then to_char('08/22/2016') 
+        else to_char(entrydate,'MM/DD/YYYY') 
+      end) > to_char(exitdate,'MM/DD/YYYY'))then NULL 
   else 
     (case --otherwide return grade level dependent stage 5 date, but only when entry date is before the stage 5 date otherwise entrydate (stage 4) and stage 5 date are the same
       when entrydate <= '08-AUG-16' and grade_level between -1 and 8 then to_char('08/08/2016')   
