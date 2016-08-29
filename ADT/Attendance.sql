@@ -8,8 +8,8 @@ ps_customfields.getStudentsCF(s.id, 'state_usi') AS USI
 --,a.att_date
 ,date_value
 ,CASE 
-  WHEN AC.ATT_CODE IN ('A','C','E','F','H','M','MP','O') THEN 'AFE'
-  WHEN AC.ATT_CODE IN ('MU','X') THEN 'AFU'
+  WHEN AC.ATT_CODE IN ('C','E','F','H','M','MP','O') THEN 'AFE'
+  WHEN AC.ATT_CODE IN ('A','MU','X') THEN 'AFU'
   WHEN AC.ATT_CODE IN ('RAE','TAE') THEN 'APE'
   WHEN AC.ATT_CODE IN ('RA','TA') THEN 'APU'
   WHEN AC.ATT_CODE IN ('AP','DO','HP','ISS','P','NA') OR AC.ATT_CODE IS NULL THEN 'PF'
