@@ -52,7 +52,8 @@ Select
     else entrycode --if current date is after stage 5 date then just use the regular entrycode
   end AS ENROLLMENT_CODE
 , case 
-    when exitdate <= sysdate then to_char(exitdate,'MM/DD/YYYY') 
+    when exitdate <= sysdate then to_char(exitdate,'MM/DD/YYYY')
+    --when sysdate >= '06/16/2017' then 6/16/17
     else null 
   end  AS EXIT_DATE
 , case 
