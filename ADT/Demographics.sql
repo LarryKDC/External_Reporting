@@ -19,8 +19,8 @@ SELECT
 , '' AS FIRST_NINTH_GRADE_YEAR
 , COALESCE((SELECT DISTINCT 'Y' FROM spenrollments WHERE studentid = s.id AND (exit_date = '01-JAN-1900' or exit_date>=sysdate) AND programid = (SELECT id FROM gen WHERE cat = 'specprog' AND name = 'ELL')),'N') AS LEP_INDICATOR
 , '' AS LEP_STATUS
-, s.fedethnicity
-, (SELECT racecd FROM studentrace WHERE studentid = s.id) AS RACE
+, s.fedethnicity AS ETHNICITY
+, (SELECT LISTAGG(racecd,',') WITHIN GROUP (ORDER BY RACECD) FROM studentrace WHERE studentid = s.id) AS RACE
 , s.lunchstatus AS FARMS
 , ps_customfields.getStudentsCF(s.id,'Homeless_Code') AS HOMELESS_INDICATOR
 , '' AS HOMELESS_NIGHT_RES
