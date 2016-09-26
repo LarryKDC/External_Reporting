@@ -16,7 +16,7 @@ SELECT
 , ps_customfields.getStudentsCF(s.id,'COUNTRY_OF_BIRTH') AS Country_of_Birth
 , ps_customfields.getStudentsCF(s.id,'NEW_TO_US') AS NEW_TO_US
 , '' AS NATIV_LANG
-, '' AS FIRST_NINTH_GRADE_YEAR
+, first_ninth_grade_year AS FIRST_NINTH_GRADE_YEAR
 , COALESCE((SELECT DISTINCT 'Y' FROM spenrollments WHERE studentid = s.id AND (exit_date = '01-JAN-1900' or exit_date>=sysdate) AND programid = (SELECT id FROM gen WHERE cat = 'specprog' AND name = 'ELL')),'N') AS LEP_INDICATOR
 , '' AS LEP_STATUS
 , s.fedethnicity AS ETHNICITY
@@ -36,4 +36,5 @@ SELECT
 , ps_customfields.getStudentsCF(s.id,'STATE_UHC') AS UNIVERSAL_HEALTH_CERTIFICATE
 , s.home_room AS COUNT_LOCATION
 FROM students s
+JOIN u_students u_s on u_s.studentsdcid = s.dcid
 where entrydate >= '01-JUL-16'
