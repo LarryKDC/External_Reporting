@@ -5,7 +5,11 @@ SELECT
 , 'Contacts' AS COLLECTION_TYPE
 , TO_CHAR(s.student_number) AS SIS_ID
 , '' AS CONTACT_ID
-, case when mother is not null then 111 else 121 end AS CONTACT_TYPE
+, case 
+      when mother = 'ward of the state' then 122
+      when mother is not null then 111 
+      else 121 
+  end AS CONTACT_TYPE
 , case when ps_customfields.getStudentsCF(s.id,'guardian')='Mother' then 'Y' else 'N' end  AS PRIMARY_GUARDIAN_INDICATOR 
 , substr(mother,instr(mother,' ')+1) as CONTACT_FIRST_NAME
 , '' AS CONTACT_MIDDLE_NAME
