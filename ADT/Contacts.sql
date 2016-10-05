@@ -6,7 +6,7 @@ SELECT
 , TO_CHAR(s.student_number) AS SIS_ID
 , '' AS CONTACT_ID
 , case 
-      when mother = 'ward of the state' then 122
+      when lower(mother) = 'ward of the state' then 122
       when mother is not null then 111 
       else 121 
   end AS CONTACT_TYPE
