@@ -1,5 +1,4 @@
 select
-e.schoolid,
 student_number,
 first_name,
 last_name,
@@ -9,16 +8,23 @@ gender,
 dob,
 case when ps_customfields.getcf('Students',s.id,'SPED_Funding') is not null then 'Y' else 'N' end as Special_Needs,
 e.entrydate,
-e.exitdate,
-case when e.exitcode = 'G' then e.exitdate else null end AS "GRADUATION",
+case  
+    when e.grade_level = 4 and s.grade_level = 5 then e.exitdate
+    when e.grade_level = 8 and s.grade_level = 9 then e.exitdate
+    when e.grade_level = 12 and s.grade_level = 99 then e.exitdate
+    when s.exitdate <= '01-OCT-16' then e.exitdate
+  else NULL
+end "EXITDATE",
+case 
+  when e.grade_level = 4 and s.grade_level = 5 then 1
+  when e.grade_level = 8 and s.grade_level = 9 then 1
+  when e.grade_level = 12 and s.grade_level = 99 then 1
+  else 0 
+end GRADUATION,
 e.exitcode,
 e.exitcomment
 from students s
 join (select studentid, schoolid, grade_level, entrydate, entrycode, exitdate, exitcode, exitcomment from reenrollments
       union all
       select id,        schoolid, grade_level, entrydate, entrycode, exitdate, exitcode, exitcomment from students) e on e.studentid = s.id
-where e.entrydate <= '05-OCT-15'
---and s.exitdate between '01-OCT-15' and '01-OCT-16'
-and e.exitdate between '01-OCT-15' and '01-OCT-16' 
-and s.enroll_status != 0
-order by e.exitcode
+where '01-OCT-15' between e.entrydate and e.exitdate
