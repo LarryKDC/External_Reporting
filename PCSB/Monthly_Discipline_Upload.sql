@@ -43,31 +43,16 @@ P.NUMDAYS AS 'Duration of Disciplinary Action',
 CONVERT(VARCHAR, P.STARTDATE, 101) AS 'Start Date of Disciplinary Action',
 CONVERT(VARCHAR, P.ENDDATE, 101) AS 'End Date of Disciplinary Action',
 NULL AS 'Disciplinary Action Partial Days', --Optional
-'**Choose Yes or No**' AS 'Education Services Received?',
+'Yes' AS 'Education Services Received?',
 CASE 
 	WHEN CS.SPED_FUNDING IS NOT NULL THEN 'N'
 	ELSE NULL
 END AS 'Interim Removal',
-CASE 
-	WHEN CS.SPED_FUNDING IS NOT NULL THEN 'NULL'
-	ELSE NULL
-END AS 'Interim Removal Reason (IDEA)',
-CASE
-	WHEN CS.SPED_FUNDING IS NOT NULL THEN '**Choose REMHO OR REMODW**'
-	ELSE NULL
-END AS 'Type of Interim Removal (IDEA)',	
-CASE
-	WHEN CS.SPED_FUNDING IS NOT NULL THEN '**Choose Number of Days**'
-	ELSE NULL
-END AS 'Length of Interim Removal (Days)',
-CASE
-	WHEN CS.SPED_FUNDING IS NOT NULL THEN '**Choose Date as MM/DD/YYYY**'
-	ELSE NULL
-END AS 'Date Interim Removal Began',
-CASE
-	WHEN CS.SPED_FUNDING IS NOT NULL THEN '**Choose Date as MM/DD/YYYY**'
-	ELSE NULL
-END AS 'Date Interim Removal Ended'	
+NULL AS 'Interim Removal Reason (IDEA)',
+NULL AS 'Type of Interim Removal (IDEA)',	
+NULL AS 'Length of Interim Removal (Days)',
+NULL AS 'Date Interim Removal Began',
+NULL AS 'Date Interim Removal Ended'	
 FROM [DW].[DW_DIMSTUDENT] S
 JOIN CUSTOM.CUSTOM_STUDENTS CS ON CS.SYSTEMSTUDENTID = S.SYSTEMSTUDENTID
 JOIN [CUSTOM].[CUSTOM_STUDENTBRIDGE] SB ON SB.SYSTEMSTUDENTID = S.SYSTEMSTUDENTID
