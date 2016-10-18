@@ -1,4 +1,5 @@
 SELECT
+S.FULLNAME AS NAME_REMOVE,
 'Disciplinary' AS 'Collection Type',
 '2016-2017' AS 'School Year',
 '129' AS 'LEA ID',
@@ -18,7 +19,7 @@ CASE
 	WHEN INFRACTION = 'Threatening Physical Harm' THEN 'Threat/intimidation'
 	WHEN INFRACTION LIKE 'Weapons%' THEN 'Weapons Possession'
 	WHEN INFRACTION IS NULL THEN '**MISSING INFRACTION**'
-	ELSE INFRACTION 
+	ELSE INFRACTION
 END AS 'Reason Student Was Disciplined', --transform to match 
 NULL AS 'Secondary Incident Behavior', --Optional
 CASE 
@@ -44,11 +45,11 @@ CONVERT(VARCHAR, P.ENDDATE, 101) AS 'End Date of Disciplinary Action',
 NULL AS 'Disciplinary Action Partial Days', --Optional
 '**Choose Yes or No**' AS 'Education Services Received?',
 CASE 
-	WHEN CS.SPED_FUNDING IS NOT NULL THEN '**Choose Y or N**'
+	WHEN CS.SPED_FUNDING IS NOT NULL THEN 'N'
 	ELSE NULL
 END AS 'Interim Removal',
 CASE 
-	WHEN CS.SPED_FUNDING IS NOT NULL THEN '**Choose Weapons, Drugs, or Serious bodily injury**'
+	WHEN CS.SPED_FUNDING IS NOT NULL THEN 'NULL'
 	ELSE NULL
 END AS 'Interim Removal Reason (IDEA)',
 CASE
