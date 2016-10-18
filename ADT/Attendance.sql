@@ -1,4 +1,4 @@
-select 
+select --this is a test
  '129' as LEA_ID
 , '2016-2017' AS SCHOOL_YEAR 
 , TO_CHAR(SYSDATE,'MM/DD/YYYY HH24:MI')AS COLLECTION_DATE
