@@ -34,7 +34,7 @@ SELECT
 , ps_customfields.getStudentsCF(s.id,'STATE_RESIDENT') AS RESIDENCY
 , ps_customfields.getStudentsCF(s.id,'STATE_TUITION') AS TUITION_INDICATOR
 , ps_customfields.getStudentsCF(s.id,'STATE_UHC') AS UNIVERSAL_HEALTH_CERTIFICATE
-, s.home_room AS COUNT_LOCATION
+, s.home_room AS AUDIT_COUNT_LOCATION
 FROM students s
 LEFT OUTER JOIN u_students u_s on u_s.studentsdcid = s.dcid
 where entrydate >= '01-JUL-16'
