@@ -7,7 +7,6 @@ Select
 , TO_CHAR(SYSDATE,'MM/DD/YYYY HH24:MI')AS COLLECTION_DATE
 , 'Enrollment' COLLECTION_TYPE
 , s.student_number AS SIS_ID
-, s.lastfirst
 , to_char(e.grade_level) AS ENROLL_Grade_Level
 , case when e.schoolid = 2001 then ps_customfields.getStudentsCF(s.id,'SPED_Placed_Campus_ID') else TO_CHAR(alternate_school_number) end AS ATTENDING_SCHOOL_ID
 , case when e.schoolid = 2001 then ps_customfields.getStudentsCF(s.id, 'SPED_NPP_School') else sc.abbreviation end AS ATTENDING_SCHOOL_NAME
