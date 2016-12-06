@@ -1,4 +1,5 @@
 SELECT
+I.INCIDENTID,
 S.FULLNAME AS NAME_REMOVE,
 'Disciplinary' AS 'Collection Type',
 '2016-2017' AS 'School Year',
@@ -15,7 +16,7 @@ NULL AS 'Incident Time Description', --Optional
 CASE 
 	WHEN INFRACTION = 'Alcohol Related' THEN 'Alcohol possession or use'
 	WHEN INFRACTION = 'Sexual Misconduct or Harrassment' THEN 'Harrassment, Sexual'
-	WHEN INFRACTION = 'Theft' THEN 'Robbery'
+    WHEN INFRACTION = 'Theft' THEN (CASE WHEN (INJURYTYPE IS NULL or INJURYTYPE = 'No Injury') THEN 'Theft without violence' ELSE 'Robbery' END) --no injury theft without violence, if injury then robbery
 	WHEN INFRACTION = 'Threatening Physical Harm' THEN 'Threat/intimidation'
 	WHEN INFRACTION LIKE 'Weapons%' THEN 'Weapons Possession'
 	WHEN INFRACTION IS NULL THEN '**MISSING INFRACTION**'
@@ -26,7 +27,7 @@ CASE
 	WHEN INFRACTION IN ('Bullying','Fighting',
 						'Sexual Misconduct or Harrassment',
 						'Theft','Threatening Physical Harm',
-						'Violent Incident (WITH physical injury) (VIOWINJ)') THEN (CASE WHEN INJURYTYPE IS NULL THEN '**Missing Injury Type**' ELSE INJURYTYPE END)--'**Choose Minor Injury, Serious Bodily Injury or No Injury**'
+						'Violent Incident (WITH physical injury) (VIOWINJ)') THEN (CASE WHEN INJURYTYPE IS NULL THEN '**MISSING INJURY TYPE**' ELSE INJURYTYPE END)--'**Choose Minor Injury, Serious Bodily Injury or No Injury**'
 END AS 'Injury Type',
 CASE
 	WHEN INFRACTION LIKE 'Weapon%' THEN '**Choose weapon type**'
@@ -61,6 +62,6 @@ JOIN [CUSTOM].[CUSTOM_DLPENALTIES_RAW] P ON P.INCIDENTID = I.INCIDENTID
 JOIN POWERSCHOOL.POWERSCHOOL_STUDENTS PS ON PS.STUDENT_NUMBER = SB.STUDENT_NUMBER
 JOIN POWERSCHOOL.POWERSCHOOL_SCHOOLS SC ON SC.SCHOOL_NUMBER = PS.SCHOOLID
 WHERE 1=1
-AND coalesce(p.startdate,i.issueTS) BETWEEN '2016-10-01' and '2016-10-31'--CONVERT(DATE,DATEADD(MM, DATEDIFF(MM, 0, GETDATE())-2, 0)) AND CONVERT(DATE,DATEADD(MS, -3, DATEADD(MM, DATEDIFF(MM, 0, GETDATE()) , 0)))
+AND coalesce(p.startdate,i.issueTS) BETWEEN '2016-11-01' and '2016-11-30'--CONVERT(DATE,DATEADD(MM, DATEDIFF(MM, 0, GETDATE())-2, 0)) AND CONVERT(DATE,DATEADD(MS, -3, DATEADD(MM, DATEDIFF(MM, 0, GETDATE()) , 0)))
 AND P.PENALTYNAME IN ('OSS','Expulsion')--,'ISS')
 order by p.startdate
