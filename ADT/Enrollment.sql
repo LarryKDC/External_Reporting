@@ -18,7 +18,14 @@ Select
 , '' AS ENROLLMENT_1_APPLICATION
 , '' AS ENROLLMENT_2_NOTIFICATION
 , '' AS ENROLLMENT_3_ACCEPTED
-, TO_CHAR(e.entrydate,'MM/DD/YYYY') AS ENROLLMENT_4_REGISTRATION
+,
+CASE -- IF ENTRYDATE IS ON OR AFTER THE FIRST DAY OF INSTRUCTION STAGE 4 DATE IS NULL
+  WHEN ((e.entrydate < '08-AUG-16' AND e.grade_level BETWEEN -1 AND 8) 
+     OR (e.entrydate < '15-AUG-16' AND (e.grade_level = -2 OR e.grade_level = 9)) 
+     OR (e.entrydate < '22-AUG-16' AND e.grade_level BETWEEN 10 AND 12)) THEN TO_CHAR(e.entrydate,'MM/DD/YYYY')
+  ELSE NULL
+END AS ENROLLMENT_4_REGISTRATION  
+--, TO_CHAR(e.entrydate,'MM/DD/YYYY') AS ENROLLMENT_4_REGISTRATION -- ****make null if the student was previously enrolled and stage 5 enrollment date can't be the same date as an exitdate
 , case --otherwide return grade level dependent stage 5 date, but only when entry date is before the stage 5 date otherwise e.entrydate (stage 4) and stage 5 date are the same
     when ((e.exitdate <= '08-AUG-16' and e.grade_level between -1 and 8) or
           (e.exitdate <= '15-AUG-16' and (e.grade_level = -2 or e.grade_level = 9)) or
@@ -27,7 +34,7 @@ Select
     when e.entrydate <= '15-AUG-16' and (e.grade_level = -2 or e.grade_level = 9) then to_char('08/15/2016')   
     when e.entrydate <= '22-AUG-16' and e.grade_level between 10 and 12 then to_char('08/22/2016') 
     else to_char(e.entrydate,'MM/DD/YYYY') 
-  end AS ENROLLMENT_5_SERVICES_RECEIVED  
+  end AS ENROLLMENT_5_SERVICES_RECEIVED 
   
 , case 
     when --make code null if stage 5 date is after current date; NULL is mapped to 1800 (pre-enrollment) in ADT
