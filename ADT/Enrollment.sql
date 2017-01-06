@@ -39,13 +39,14 @@ END AS ENROLLMENT_4_REGISTRATION
 , case 
     when --make code null if stage 5 date is after current date; NULL is mapped to 1800 (pre-enrollment) in ADT
       (case 
-        when e.entrydate <= '08-AUG-16' and e.grade_level between -1 and 8 then to_char('08/08/2016')   
-        when e.entrydate <= '15-AUG-16' and (e.grade_level = -2 or e.grade_level = 9) then to_char('08/15/2016')   
-        when e.entrydate <= '22-AUG-16' and e.grade_level between 10 and 12 then to_char('08/22/2016') 
-        else to_char(e.entrydate,'MM/DD/YYYY') 
-      end) > to_char(sysdate,'MM/DD/YYYY') then NULL 
+        when e.entrydate <= '08-AUG-16' and e.grade_level between -1 and 8 then to_date('08/08/2016','MM/DD/YYYY')   
+        when e.entrydate <= '15-AUG-16' and (e.grade_level = -2 or e.grade_level = 9) then to_date('08/15/2016','MM/DD/YYYY')   
+        when e.entrydate <= '22-AUG-16' and e.grade_level between 10 and 12 then to_date('08/22/2016','MM/DD/YYYY') 
+        else e.entrydate 
+      end) > sysdate then NULL 
     else entrycode --if current date is after stage 5 date then just use the regular entrycode
   end AS ENROLLMENT_CODE
+
 , case 
     when e.exitdate <= sysdate then to_char(e.exitdate,'MM/DD/YYYY') 
     else null 
