@@ -6,7 +6,7 @@ SELECT
 , TO_CHAR(s.student_number) AS SIS_ID
 , '' AS CONTACT_ID
 , case 
-      when mother = 'ward of the state' then 122
+      when us.foster_care is not null then 122
       when mother is not null then 111 
       else 121 
   end AS CONTACT_TYPE
@@ -25,5 +25,6 @@ SELECT
 , s.state as STATE
 , s.zip AS ZIP_CODE
 from students s
+join u_students us on us.studentsdcid = s.dcid
 where s.entrydate > = '01-JUL-16'
 and s.schoolid != 999999
